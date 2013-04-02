@@ -2,7 +2,7 @@
 * Çağdaş Şenol(Bilgi CS)
 * Fehmi Can Sağlam(4Primes)
 * Volkan Yazıcı(Özyeğin CS)
-* Erdem Ağaoğlu(???)
+* Erdem Ağaoğlu(Nokta)
 * M.Deniz Oktar(VNGRS)
 * Barış Can Dalyık(VNGRS)
 
