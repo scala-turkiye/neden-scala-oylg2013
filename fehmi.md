@@ -27,7 +27,7 @@ Eş-zamanlı iş parçacıklarının paylaşımlı değişken durumlara(mutable 
 
 **non-determinism = paralel işleme + değişken durum**
 
-** Rasgele olmayan işleme istiyorsak değişken durumdan(mutable state) sakınmamız gerekli.**
+**Rasgele olmayan işleme istiyorsak değişken durumdan(mutable state) sakınmamız gerekli.**
 
 #### Senkronizasyon maliyeti
 
@@ -98,10 +98,12 @@ var callback = function(data) {
 $.get('/example', callback);
 
 // Bu satır çalıştığında uzak servis çağrısıdan büyük ihtimalle henüz cevap dönmemiş olacak. 
-console.log(''Bu satır callbackten önce çalışabilir!');
+console.log('Bu satır callbackten önce çalışabilir!');
 ```
 
 #### Play Framework ile async örneği
+
+Cloud ile birlikte tipik bir uygulama pek çok uzak servis çağrısı yapmak durumunda kalıyor.
 
 ```scala
 object ProxyController extends Controller {
@@ -110,8 +112,6 @@ object ProxyController extends Controller {
     val responseFuture: Future[Response] = WS.url("http://example.com").get()
 
     val resultFuture: Future[Result] = responseFuture.map { resp =>
-      // Create a Result that uses the http status, body, and content-type
-      // from the example.com Response
       Status(resp.status)(resp.body).as(resp.ahcResponse.getContentType)
     }
 
@@ -122,7 +122,7 @@ object ProxyController extends Controller {
 ```
 
 ```scala
-// Make 3 parallel async calls
+// Paralel 3 adet servis çağrısı yapılıyor.
 val fooFuture = WS.url("http://foo.com").get()
 val barFuture = WS.url("http://bar.com").get()
 val bazFuture = WS.url("http://baz.com").get()
@@ -132,7 +132,7 @@ for {
   bar <- barFuture
   baz <- bazFuture
 } yield {
-  // Build a Result using foo, bar, and baz
+  
 
   Ok(...)
 }
