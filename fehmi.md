@@ -55,3 +55,80 @@ Aktif threadler sistem kaynaklarını(özellikle bellek) kullanırlar. Kullanıl
 ### Stability
 
 Oluşturulabilecek thread sayısı sınırlıdır. Bu sınır stack size gibi parametrelere ve işletim sisteminin sınırlarına bağlıdır. Bu sınıra ulaştığınızda OOM gibi bir yanıt alırsınız. Bu durumu recover etmeye çalışmak risklidir. Bunun yerine uygulamanızı bu sınıra ulaşmayacak şekilde tasarlamanız daha kolaydır.
+
+
+## Threaded vs Evented
+
+Threaded: Servlets, Ruby on Rails, Django, PHP
+Evented: Play, Node.js, Twisted
+
+
+**Blocking Scala kodu**
+
+```scala
+// Use Apache HttpClient to make a remote call to example.com
+
+val client = new HttpClient()
+val method = new GetMethod("http://www.example.com/")
+
+// executeMethod is a blocking, synchronous call
+val statusCode = client.executeMethod(method)
+
+// When this line is executed, we are guaranteed that the call to example.com
+// has completed
+println("Server responsed with %d".format(statusCode))
+```
+
+**Non-blocking Javascript kodu**
+```js
+// Use jQuery to make an Ajax call to /example
+
+var callback = function(data) {
+  console.log("Callback fired with: " + data);
+};
+
+// $.get is a non-blocking, asynchronous call
+$.get('/example', callback);
+
+// When this line is executed, we are not garaunteed that the call to /example
+// has completed
+console.log('This line may execute before the callback!');
+```
+
+## Play Framework ile async programlama
+
+```scala
+object ProxyController extends Controller {
+
+  def proxy = Action {
+    val responseFuture: Future[Response] = WS.url("http://example.com").get()
+
+    val resultFuture: Future[Result] = responseFuture.map { resp =>
+      // Create a Result that uses the http status, body, and content-type
+      // from the example.com Response
+      Status(resp.status)(resp.body).as(resp.ahcResponse.getContentType)
+    }
+
+    Async(resultFuture)
+  }
+
+}
+```
+
+```scala
+// Make 3 parallel async calls
+val fooFuture = WS.url("http://foo.com").get()
+val barFuture = WS.url("http://bar.com").get()
+val bazFuture = WS.url("http://baz.com").get()
+
+for {
+  foo <- fooFuture
+  bar <- barFuture
+  baz <- bazFuture
+} yield {
+  // Build a Result using foo, bar, and baz
+
+  Ok(...)
+}
+```
+
