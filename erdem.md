@@ -9,3 +9,14 @@ Nokta'da uğraştığımız işler genellikle nispeten büyük ölçeklerde. Hem
 Hıza örnek olarak bahsedilebilecek küçük bir projemiz daha oldu. Yakın zamanda elimizdeki yaklaşık 50 milyon dosyayı bir yerden bir yere kopyalamamız gerekti. Bunu normal bir sıralı kopyalamayla yapmaya kalksak aylar alabileceğini hesapladık. Diğer taraftan yarım günlük bir çalışma ve 100 satır kadar scala koduyla işi paralelleştirdik ve bir kaç haftada işi tamamladık.
 
 Tabii ki hem fonksiyonel programlamanın hem de yeni bir programlama dili olarak Scala'nın bir öğrenme süreci var. Ama bu asla boşa giden bir yatırım değil. Eğer yapılan işin kapsamı çok dar değilse zaten birden fazla dil öğrenmek ve gerekeni gerektiği yerde kullanmak artık bir mecburiyet. Scala ise bu araçlar arasında önemli bir yere sahip.
+
+
+###Slidelar icin
+
+* Erdem Ağaoğlu(Nokta)
+* NoSQL -> Ölçeklenebilir veritabanı
+* Scala -> Ölçeklenebilir programlar
+* Multithread lüks değil, gereksinim
+* Amaca yönelik araç kullanımı
+* 50.000req/min i Scala ile işliyorlar
+* Sequential haftalar sürece bir işi Scala concurrency ve 100 satırda 1 haftada halettiler
