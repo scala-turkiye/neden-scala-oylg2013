@@ -1,10 +1,15 @@
 ## Neden Scala?
 * Çağdaş Şenol(Bilgi CS)
+ * http://friendfeed.com/csenol
 * Fehmi Can Sağlam(4Primes)
+ * http://fehmicansaglam.net/
 * Volkan Yazıcı(Özyeğin CS)
+ * https://twitter.com/yazicivo
 * Erdem Ağaoğlu(Nokta)
+ * https://twitter.com/agaoglu
 * M.Deniz Oktar(VNGRS)
-* Barış Can Dalyık(VNGRS)
+ * https://twitter.com/denizoktar
+* Barış Can Daylık(VNGRS)
 
 ## Anahatlar
 
@@ -12,6 +17,8 @@
 * Özetle Scala neydi hatırlatması
 * Neden Scala'ya ihtiyaç duyuldu
 * Kullananların Tecrübeleri
+* Süre kıstılı, sorular en son
+* Bir sonraki sunum Mehmet Ali Gözaydın MongoDB + Play/Scala
 
 ## Gelişim
 * 2011 Haziran. Scala Videoları
