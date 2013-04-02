@@ -1,4 +1,4 @@
-## Ölçekleme
+## Tanımlar
 
 ### Yatay ölçekleme (Scala out/Scale down)
 
