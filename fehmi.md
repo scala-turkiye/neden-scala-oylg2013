@@ -2,21 +2,21 @@
 
 ### Yatay ölçekleme (Scala out/Scale down)
 
-Add more nodes to a system, such as adding a new computer to a distributed software application.
+Dağıtık bir uygulamaya yeni bir düğüm(node) eklemek ya da çıkarmak.
 
 ### Dikey ölçekleme (Scale up)
 
-Add resources to a single node in a system, typically involving the addition of CPUs or memory to a single computer.
+Tek bir düğüme CPU ya da bellek gibi yeni kaynak eklemek.
 
 #### Parallelism
 
 Paralel donanımlar üzerinde programları daha hızlı koşmak.
 
-#### Concurrency
+#### Concurrency (Eş zamanlılık)
 
 İş parçacıklarının eş-zamanlı olarak koşmalarını yönetmek.
 
-#### Temel problem
+#### Concurrency problemi
 ```scala
 var x = 0
 async { x = x + 1 }
@@ -27,75 +27,81 @@ Eş-zamanlı iş parçacıklarının paylaşımlı değişken durumlara(mutable 
 
 **non-determinism = paralel işleme + değişken durum**
 
-Rasgele olmayan işleme istiyorsak değişken durumdan(mutable state) sakınmamız gerekli.
+** Rasgele olmayan işleme istiyorsak değişken durumdan(mutable state) sakınmamız gerekli.**
 
 #### Senkronizasyon maliyeti
 
 Eğer mutable state varsa eş zamanlı çalışmanın senkronize edilmesi gerekir. Java’da aşağıdaki senkronizasyon araçları mevcuttur.
 
-* Atomik veri yapıları (AtomicInteger, …)
+* Atomik veri yapıları (AtomicInteger, ...)
 * Synchronized bloklar
 * CountDownLatch
 * CyclicBarrier
 * Semaphore
 
-Eğer uygulamanızda mutable state yoksa senkronizasyon gibi bir sorununuz da yoktur.
-
-
-## Sınırsız thread oluşturmanın dezavantajları
-
-### Thread Lifecycle overhead
-
-Thread oluşturma ve öldürme maliyetsiz değildir. Çoğu sunucu uygulamasında olduğu gibi istekler sık ve küçük ise her bir istek için yeni bir thread oluşturmak oldukça yüksek kaynak tüketimine sebep olur.
-
-### Resource consumption
-
-Aktif threadler sistem kaynaklarını(özellikle bellek) kullanırlar. Kullanılabilir işlemci sayısından daha fazla thread var ise threadler boş dururlar. Boş duran threadler gereksiz yere bellek kullanırlar. İşlemciler için yarışan çok sayıda thread var ise bu durum ayrıca performans kaybına sebep olabilir.
-
-### Stability
-
-Oluşturulabilecek thread sayısı sınırlıdır. Bu sınır stack size gibi parametrelere ve işletim sisteminin sınırlarına bağlıdır. Bu sınıra ulaştığınızda OOM gibi bir yanıt alırsınız. Bu durumu recover etmeye çalışmak risklidir. Bunun yerine uygulamanızı bu sınıra ulaşmayacak şekilde tasarlamanız daha kolaydır.
-
+**Eğer uygulamanızda mutable state yoksa senkronizasyon gibi bir sorununuz da yoktur.**
 
 ## Threaded vs Evented
 
-Threaded: Servlets, Ruby on Rails, Django, PHP
-Evented: Play, Node.js, Twisted
+* Threaded: Servlets, Ruby on Rails, Django, PHP
 
+* Evented: Play, Node.js, Twisted
+
+### Threaded sunucular
+
+Threaded sunucular her bir isteğe bir thread atarlar ve o thread cevap gönderilene kadar tüm işleri gerçekleştirirler. Uzak bir servis çağrısı gibi herhangi bir I/O senkrondur. Bu sebeple thread bloklanır ve I/O işlemi tamamlanana kadar boş oturur.
 
 **Blocking Scala kodu**
 
 ```scala
-// Use Apache HttpClient to make a remote call to example.com
-
+// Apache HttpClient ile example.com'dan bir istek yapılıyor.
 val client = new HttpClient()
 val method = new GetMethod("http://www.example.com/")
 
-// executeMethod is a blocking, synchronous call
+// executeMethod blocking, senkron bir çağrıdır
 val statusCode = client.executeMethod(method)
 
-// When this line is executed, we are guaranteed that the call to example.com
-// has completed
+// Bu satır çalıştığında example.com'dan cevap alındığından eminiz.
 println("Server responsed with %d".format(statusCode))
 ```
 
+### Sınırsız thread oluşturmanın dezavantajları
+
+#### Thread yaşam döngüsü maliyeti
+
+Thread oluşturma ve öldürme maliyetsiz değildir. 
+Çoğu sunucu uygulamasında olduğu gibi istekler sık ve küçük ise her bir istek için yeni bir thread oluşturmak 
+oldukça yüksek kaynak tüketimine sebep olur.
+
+#### Kaynak tüketimi
+
+Aktif threadler sistem kaynaklarını(özellikle bellek) kullanırlar. 
+Kullanılabilir işlemci sayısından daha fazla thread var ise threadler boş dururlar. 
+Boş duran threadler gereksiz yere bellek kullanırlar. 
+İşlemciler için yarışan çok sayıda thread var ise bu durum ayrıca performans kaybına sebep olabilir.
+
+#### Kararlılık
+
+Oluşturulabilecek thread sayısı sınırlıdır. 
+Bu sınır stack size gibi parametrelere ve işletim sisteminin sınırlarına bağlıdır. 
+Bu sınıra ulaştığınızda OOM gibi bir yanıt alırsınız. Bu durumu düzeltmeye çalışmak risklidir. 
+Bunun yerine uygulamanızı bu sınıra ulaşmayacak şekilde tasarlamanız daha kolaydır.
+
+### Evented sunucular
+
 **Non-blocking Javascript kodu**
 ```js
-// Use jQuery to make an Ajax call to /example
-
 var callback = function(data) {
   console.log("Callback fired with: " + data);
 };
 
-// $.get is a non-blocking, asynchronous call
 $.get('/example', callback);
 
-// When this line is executed, we are not garaunteed that the call to /example
-// has completed
-console.log('This line may execute before the callback!');
+// Bu satır çalıştığında uzak servis çağrısıdan büyük ihtimalle henüz cevap dönmemiş olacak. 
+console.log(''Bu satır callbackten önce çalışabilir!');
 ```
 
-## Play Framework ile async programlama
+#### Play Framework ile async örneği
 
 ```scala
 object ProxyController extends Controller {
