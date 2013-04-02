@@ -89,6 +89,10 @@ Bunun yerine uygulamanızı bu sınıra ulaşmayacak şekilde tasarlamanız daha
 
 ### Evented sunucular
 
+Evented sunucular genelde CPU çekirdeği başına yalnızca bir thread kullanırlar.
+Tüm olay threadlerin asla bloklanmayacakları üzerine kuruludur. Tüm I/O asenkrondur.
+Böylece boş beklemek yerine thread diğer istekleri işleyebilir ve I/O cevanı hazır olduğunda tekrar geri dönebilir.
+
 **Non-blocking Javascript kodu**
 ```js
 var callback = function(data) {
