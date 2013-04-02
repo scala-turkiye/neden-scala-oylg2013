@@ -25,7 +25,7 @@ async { x = x * 2 }
 ```
 Eş-zamanlı iş parçacıklarının paylaşımlı değişken durumlara(mutable shared state) erişmesi rasgeleliğin sebebidir.
 
-*non-determinism = paralel işleme + değişken durum*
+**non-determinism = paralel işleme + değişken durum**
 
 Rasgele olmayan işleme istiyorsak değişken durumdan(mutable state) sakınmamız gerekli.
 
